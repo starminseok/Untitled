@@ -1,0 +1,75 @@
+import random
+import pandas as pd
+
+def binary_fission(data, cur_gen):
+    prev_pos = 0
+    data.loc[len(data)] = [data.loc[1, 'DNA'], cur_gen, 1]
+    cur_gen+=1
+    while(1):
+        for i in range(2**(cur_gen-1)):
+            for j in range(2):
+                data.loc[len(data)] = [data.loc[prev_pos, 'DNA'],cur_gen,1]
+                dna_str=data.loc[prev_pos,'DNA']
+                dna_str=mutation(dna_str)
+                if dna_str == descendant_dna[0]:
+                    global descendant1_pos
+                    descendant1_pos = i
+                elif dna_str == descendant_dna[1]:
+                    global descendant2_pos
+                    descendant2_pos = i
+                elif dna_str == descendant_dna[2]:
+                    global descendant3_pos
+                    descendant3_pos = i
+                data = data.drop(prev_pos, axis=0)
+                data.loc[len(data)] = [dna_str,cur_gen,1]
+            prev_pos+=1
+        prev_pos+=1
+        cur_gen+=1
+        if descendant1_pos and descendant2_pos and descendant3_pos:
+            break
+    return data
+
+def mutation(dna_str):
+    for i, nucleotide in enumerate(dna_str):
+        p = random.randint(1, 2 * 10**11)
+        if nucleotide == 'A':
+            if p <= 1:
+                dna_str[i] = 'C'
+            elif p <= 2:
+                dna_str[i] = 'G'
+            elif 3 <= p < 12:
+                dna_str[i] = 'T'
+        elif nucleotide == 'G':
+            if p <= 1:
+                dna_str[i] = 'C'
+            elif p <= 2:
+                dna_str[i] = 'T'
+            elif 3 <= p < 12:
+                dna_str[i] = 'A'
+        elif nucleotide == 'C':
+            if p <= 1:
+                dna_str[i] = 'A'
+            elif p <= 2:
+                dna_str[i] = 'G'
+            elif 3 <= p < 12:
+                dna_str[i] = 'T'
+        elif nucleotide == 'T':
+            if p <= 1:
+                dna_str[i] = 'A'
+            elif p <= 2:
+                dna_str[i] = 'G'
+            elif 3 <= p < 12:
+                dna_str[i] = 'C'
+    return dna_str
+
+ancestor_dna = ["AAGTTCGGATAGC"]
+descendant_dna = ["AACTTCGGATAGC","AAGTGCGGATAGC","AAGTTCGGATTGG"]
+
+data = pd.DataFrame({
+    'DNA': [str(ancestor_dna)],
+    'Generation': 1,
+    'Number': 1 
+})
+
+data = binary_fission(data, 2)
+print(descendant1_pos,descendant2_pos,descendant3_pos)

@@ -1,0 +1,107 @@
+def Trans_T(triplat_code):
+    polypeptide = ['']
+    if triplat_code[1] == 'T':
+        if triplat_code[2] == 'T' or triplat_code[2] == 'C':
+            # UUU, UUC 페닐알라닌
+            polypeptide.append('F')
+        if triplat_code[2] == 'A' or triplat_code[2] == 'G':
+            # UUA, UUG 류신
+            polypeptide.append('L')
+        if triplat_code[1] == 'C':
+            # UCU, UCC, UCA, UCG 세린
+            polypeptide.append('S')
+        if triplat_code[1] == 'A':
+            if triplat_code[2] == 'T' or triplat_code[2] == 'C':
+                # UAU, UAC 타이로신
+                polypeptide.append('Y')
+            if triplat_code[2] == 'A' or triplat_code[2] == 'G':
+                # UAA, UAG 종결코돈
+                polypeptide.append('*')
+
+
+def Trans_C(triplat_code):
+    polypeptide = ['']
+    if triplat_code[1] == 'T':
+        # CUU,CUC,CUA,CUG 류신
+        polypeptide.append('L')
+    if triplat_code[1] == 'C':
+        # CCU,CCC,CCA,CCG 프롤린
+        polypeptide.append('P')
+    if triplat_code[1] == 'A':
+        if triplat_code[2] == 'T' or triplat_code[2] == 'C':
+            # CAA,CAU 히스타딘
+            polypeptide.append('H')
+        if triplat_code[2] == 'A' or triplat_code[2] == 'G':
+            # CAA,CAG 글루타민
+            polypeptide.append('Q')
+        if triplat_code[1] == 'C':
+            # CGU,CGC,CGA,CGG 아르지닌
+            polypeptide.append('R')
+
+
+def Trans_A(triplat_code):
+    polypeptide = ['']
+    if triplat_code[1] == 'T':
+        if triplat_code[2] == 'T' or triplat_code[2] == 'C' or triplat_code[2] == 'A':
+            # AUU,AUC,AUA 아이소류신
+            polypeptide.append('I')
+        if triplat_code[2] == 'G':
+            # AUG 시작코돈, 메싸이오닌
+            polypeptide.append('M')
+    if triplat_code[1] == 'C':
+        # ACU,ACC,ACA,ACG 트레오닌
+        polypeptide.append('M')
+    if triplat_code[1] == 'A':
+        if triplat_code[2] == 'T' or triplat_code[2] == 'C':
+            # AAU, AAC 아스파라긴
+            polypeptide.append('N')
+        if triplat_code[2] == 'A' or triplat_code[2] == 'G':
+            # AAA, AAG 라이신
+            polypeptide.append('K')
+    if triplat_code[1] == 'G':
+        if triplat_code[2] == 'T' or triplat_code[2] == 'C':
+            # AGU, AGC 세린
+            polypeptide.append('S')
+        if triplat_code[2] == 'A' or triplat_code[2] == 'G':
+            # AGA, AGG 아르지닌
+            polypeptide.append('R')
+
+
+def Trans_G(triplat_code):
+    polypeptide = ['']
+    if triplat_code[1] == 'T':
+        # GUU,GUC,GUA,GUG 발린
+        polypeptide.append('V')
+    if triplat_code[1] == 'C':
+        # GCU,GCC,GCA,GCG 알라닌
+        polypeptide.append('A')
+    if triplat_code[1] == 'A':
+        if triplat_code[2] == 'T' or triplat_code[2] == 'C':
+            # GAU,GAC 아스파트산
+            polypeptide.append('D')
+        if triplat_code[2] == 'A' or triplat_code[2] == 'G':
+            # GAA,GAG 글루탐산
+            polypeptide.append('E')
+    if triplat_code[1] == 'G':
+        # GGU,GGC,GGA,GGG 글라이신
+        polypeptide.append('G')
+    return polypeptide
+
+def Translation(DNA_translate):  # DNA Translation function
+    polypeptide = ['']  # polypeptide which don't constider start and end codon
+    i = 0
+    while 1:
+        # triplate code composed with three letter code
+        triplat_code = DNA_translate[i:i+2]
+        # matching DNA with the amino acid
+        if triplat_code[0] == 'T':
+            polypeptide.append(Trans_T(triplat_code))  # type: ignore
+        if triplat_code[0] == 'C':
+            polypeptide.append(Trans_C(triplat_code))  # type: ignore
+        if triplat_code[0] == 'A':
+            polypeptide.append(Trans_A(triplat_code))  # type: ignore
+        if triplat_code[0] == 'G':
+            polypeptide.append(Trans_G(triplat_code))  # type: ignore
+        i += 3
+        if (i+2) > len(DNA_translate):
+            return (polypeptide)

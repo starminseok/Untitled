@@ -1,0 +1,63 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import statistics
+
+# 그래프를 저장할 리스트
+dataframes = []
+graphs = {}  # 데이터프레임과 그래프 매핑을 위한 사전
+cursor = None
+
+def received_process_dataframe(dataframe):
+    # 데이터프레임 처리 로직을 작성합니다.
+    # 예를 들어, 특정 조건을 만족하는 행만 추출하거나 행 개수를 카운트할 수 있습니다.
+    row_count = len(dataframe)
+    dataframes.append((dataframe, row_count))  # 데이터프레임과 행 개수를 함께 저장합니다.
+    # 그래프 업데이트
+    row_counts = [count for _, count in dataframes]
+    dataframe_counts = list(range(1, len(dataframes) + 1))
+    colors = ['b' if count != statistics.mode(row_counts) else 'r' for count in row_counts]  # 최빈값이 아닌 점은 파란색, 최빈값인 점은 빨간색으로 설정
+    graph=plt.scatter(row_counts, dataframe_counts, c=colors)
+    plt.xlabel('Row Count')
+    plt.ylabel('Dataframe Count')
+    plt.title('Evolution Tendency of Paramecium')
+    plt.draw()
+    #최빈값 출력
+    mode_value = statistics.mode(row_counts)
+    print(f"Mode: {mode_value}")
+    # 데이터프레임과 그래프를 매핑
+    graphs[dataframe] = graph
+    # 최빈값인 경우 해당 데이터프레임 추출
+    if mode_value == row_count:
+        print("Dataframe with the mode value:")
+        print(dataframe)
+
+# 마우스 이벤트 핸들러 함수
+def on_mouse_move(event):
+    global cursor
+    if event.inaxes is None:
+        return
+    if cursor is not None:
+        cursor.remove()
+    for i, (dataframe, row_count) in enumerate(dataframes):
+        if dataframe_counts[i] == int(event.ydata):
+            cursor = plt.text(event.xdata, event.ydata, f"Dataframe {i+1}\nRow Count: {row_count}", color='r')
+            plt.draw()
+            break
+
+def on_mouse_click(event):
+    global cursor
+    if event.button == 1 and event.inaxes is not None:
+        for i, (dataframe, row_count) in enumerate(dataframes):
+            if dataframe_counts[i] == int(event.ydata):
+                print(f"Dataframe {i+1}:\n{dataframe}")
+                break
+
+# 그래프에 마우스 이벤트 핸들러 연결
+plt.connect('motion_notify_event', on_mouse_move)
+plt.connect('button_press_event', on_mouse_click)
+
+# 모든 그래프에서 최빈값이 되는 데이터프레임 추출
+mode_dataframes = [dataframe for dataframe, count in dataframes if count == statistics.mode([count for _, count in dataframes])]
+# 추출한 데이터프레임들을 리스트에 저장
+dataframe_list=[]
+dataframe_list.extend(mode_dataframes)

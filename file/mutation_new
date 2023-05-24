@@ -1,0 +1,34 @@
+from random import randint
+
+def mutation(dna_str,dna_len):
+    for i in range(dna_len):
+        p = randint(1, 2 * 10**11)
+        if dna_str[i] == 'A':
+            if p <= 1:
+                dna_str[i] = 'C'
+            elif p <= 2:
+                dna_str[i] = 'G'
+            elif 3 <= p < 12:
+                dna_str[i] = 'T'
+        elif dna_str[i] == 'G':
+            if p <= 1:
+                dna_str[i] = 'C'
+            elif p <= 2:
+                dna_str[i] = 'T'
+            elif 3 <= p < 12:
+                dna_str[i] = 'A'
+        elif dna_str[i] == 'C':
+            if p <= 1:
+                dna_str[i] = 'A'
+            elif p <= 2:
+                dna_str[i] = 'G'
+            elif 3 <= p < 12:
+                dna_str[i] = 'T'
+        elif dna_str[i] == 'T':
+            if p <= 1:
+                dna_str[i] = 'A'
+            elif p <= 2:
+                dna_str[i] = 'G'
+            elif 3 <= p < 12:
+                dna_str[i] = 'C'
+    return dna_str

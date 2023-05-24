@@ -1,0 +1,38 @@
+import random
+
+def mutate_dna(dna_sequence, mutation_probabilities):
+    mutated_sequence = ""
+    for base in dna_sequence:
+        mutated_base = mutate_base(base, mutation_probabilities)
+        mutated_sequence += mutated_base
+    return mutated_sequence
+
+def mutate_base(base, mutation_probabilities):
+    if base == 'A':
+        bases = ['G', 'C', 'T']
+        probabilities = [mutation_probabilities['A_to_G'], mutation_probabilities['A_to_C'], mutation_probabilities['A_to_T']]
+    elif base == 'G':
+        bases = ['A', 'C', 'T']
+        probabilities = [mutation_probabilities['G_to_A'], mutation_probabilities['G_to_C'], mutation_probabilities['G_to_T']]
+    elif base == 'C':
+        bases = ['A', 'G', 'T']
+        probabilities = [mutation_probabilities['C_to_A'], mutation_probabilities['C_to_G'], mutation_probabilities['C_to_T']]
+    elif base == 'T':
+        bases = ['A', 'C', 'G']
+        probabilities = [mutation_probabilities['T_to_A'], mutation_probabilities['T_to_C'], mutation_probabilities['T_to_G']]
+    
+    total_prob = sum(probabilities)
+    normalized_probabilities = [prob / total_prob for prob in probabilities]
+    mutated_base = random.choices(bases, weights=normalized_probabilities)[0]
+    return mutated_base
+
+# 사용 예시
+input_dna = "ATCGATCGATCG"
+mutation_probabilities = {'A_to_G': 2*(10^-10), 'A_to_C': 2*(10^-11), 'A_to_T': 2*(10^-11),
+                          'G_to_A': 2*(10^-10), 'G_to_C': 2*(10^-11), 'G_to_T': 2*(10^-11),
+                          'C_to_A': 2*(10^-11), 'C_to_G': 2*(10^-11), 'C_to_T': 2*(10^-10),
+                          'T_to_A': 2*(10^-11), 'T_to_C': 2*(10^-10), 'T_to_G': 2*(10^-11)}
+mutated_dna = mutate_dna(input_dna, mutation_probabilities)
+
+print("Input DNA:      ", input_dna)
+print("Mutated DNA:    ", mutated_dna)
