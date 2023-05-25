@@ -1,0 +1,54 @@
+import pandas as pd
+import mutation_new
+import random
+
+def binary_fission(data, cur_gen):
+    prev_pos = 0
+    data.loc[len(data)] = [data.loc[0, 'DNA'], cur_gen, 1]
+    data.loc[len(data)] = [data.loc[0, 'DNA'], cur_gen, 2]
+    print(data)
+    cur_gen += 1
+    descendant1_pos = None
+    descendant2_pos = None
+    descendant3_pos = None
+    while True:
+        for i in range(2**(cur_gen-1)):
+            prev_pos += 1
+            for j in range(2):
+                if prev_pos >= len (data):
+                    break
+                data.loc[len(data)] = [data.loc[prev_pos, 'DNA'], cur_gen, (i+1)*j]
+                dna_str = data.loc[prev_pos, 'DNA']
+                dna_str = mutation_new.mutation(dna_str)
+                if dna_str == descendant_dna[0]:
+                    descendant1_pos = i
+                elif dna_str == descendant_dna[1]:
+                    descendant2_pos = i
+                elif dna_str == descendant_dna[2]:
+                    descendant3_pos = i
+                data.loc[len(data)-1] = [dna_str, cur_gen, 1]
+                if prev_pos >= len(data):
+                    break
+            if prev_pos >= len(data):
+                break
+            print(data)
+        if prev_pos >= len(data):
+            break
+        prev_pos += 1
+        cur_gen += 1
+        
+    return data, descendant1_pos, descendant2_pos, descendant3_pos
+
+ancestor_dna = ["AAGTTCGGATAGC"]
+descendant_dna = ["AACTTCGGATAGC", "AAGTGCGGATAGC", "AAGTTCGGATTGG"]
+data = pd.DataFrame({
+    'DNA': ancestor_dna,
+    'Generation': 1,
+    'Number': 1 
+})
+
+print(data)
+
+data, descendant1_pos, descendant2_pos, descendant3_pos = binary_fission(data, 2)
+print(descendant1_pos, descendant2_pos, descendant3_pos)
+print(data)
